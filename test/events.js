@@ -54,6 +54,23 @@ describe('Events', function() {
         .to.have.been.calledOnce
         .and.calledWith('arg2', 'arg3', 'arg4');
     });
+
+    _.times(10, function(n) {
+      var args = _.map(_.times(n), function(i) {
+        return 'arg' + (i + 1);
+      });
+
+      it('should work with ' + n + ' arguments', function() {
+        this.events.on('myEvent', this.callback1);
+
+        this.events.trigger.apply(this.events, ['myEvent'].concat(args));
+
+        var _expect = expect(this.callback1)
+          .to.have.been.calledOnce;
+
+        _expect.and.calledWith.apply(_expect, args);
+      });
+    });
   });
 
   describe('on', function() {
@@ -125,6 +142,18 @@ describe('Events', function() {
         .to.have.been.calledOnce
         .and.calledWith('arg3', 'arg4')
         .and.calledOn(this.context1);
+    });
+
+    it('should have keyword "all" for adding listeners to all events', function() {
+      this.events.on('all', this.callback1);
+
+      this.events.trigger('myEvent1', 'arg1', 'arg2');
+      this.events.trigger('myEvent2', 'arg3', 'arg4');
+
+      expect(this.callback1)
+        .to.have.been.calledTwice
+        .and.calledWith('myEvent1', 'arg1', 'arg2')
+        .and.calledWith('myEvent2', 'arg3', 'arg4');
     });
   });
 
@@ -202,6 +231,17 @@ describe('Events', function() {
         .to.have.been.calledOnce
         .and.calledWith('arg5', 'arg6')
         .and.calledOn(this.context1);
+    });
+
+    it('should have keyword "all" for adding listeners to all events', function() {
+      this.events.once('all', this.callback1);
+
+      this.events.trigger('myEvent1', 'arg1', 'arg2');
+      this.events.trigger('myEvent2', 'arg3', 'arg4');
+
+      expect(this.callback1)
+        .to.have.been.calledOnce
+        .and.calledWith('myEvent1', 'arg1', 'arg2');
     });
   });
 
@@ -360,6 +400,18 @@ describe('Events', function() {
         .and.calledWith('arg3', 'arg4')
         .and.calledOn(this.events);
     });
+
+    it('should have keyword "all" for adding listeners to all events', function() {
+      this.events.listenTo(this.target1, 'all', this.callback1);
+
+      this.target1.trigger('myEvent1', 'arg1', 'arg2');
+      this.target1.trigger('myEvent2', 'arg3', 'arg4');
+
+      expect(this.callback1)
+        .to.have.been.calledTwice
+        .and.calledWith('myEvent1', 'arg1', 'arg2')
+        .and.calledWith('myEvent2', 'arg3', 'arg4');
+    });
   });
 
   describe('listenToOnce', function() {
@@ -421,6 +473,17 @@ describe('Events', function() {
         .to.have.been.calledOnce
         .and.calledWith('arg5', 'arg6')
         .and.calledOn(this.events);
+    });
+
+    it('should have keyword "all" for adding listeners to all events', function() {
+      this.events.listenToOnce(this.target1, 'all', this.callback1);
+
+      this.target1.trigger('myEvent1', 'arg1', 'arg2');
+      this.target1.trigger('myEvent2', 'arg3', 'arg4');
+
+      expect(this.callback1)
+        .to.have.been.calledOnce
+        .and.calledWith('myEvent1', 'arg1', 'arg2');
     });
   });
 
