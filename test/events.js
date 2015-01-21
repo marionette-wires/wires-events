@@ -449,7 +449,7 @@ describe('Events', function() {
       this.target1.trigger('myEvent2', 'arg3', 'arg4');
 
       expect(this.callback1)
-        .to.have.been.calledOnce
+        .to.have.been.calledTwice
         .and.calledWith('arg1', 'arg2')
         .and.always.calledOn(this.events);
     });
