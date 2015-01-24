@@ -419,6 +419,10 @@ describe('Events', function() {
       expect(this.events.listenToOnce(this.target1)).to.equal(this.events);
     });
 
+    it('should noop without a callback', function() {
+      this.events.listenToOnce(this.target1, 'myEvent').trigger('event');
+    });
+
     it('should call a callback on an event being fired on another object only once', function() {
       this.events.listenToOnce(this.target1, 'myEvent', this.callback1);
 
