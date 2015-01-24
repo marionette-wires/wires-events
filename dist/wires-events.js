@@ -150,10 +150,10 @@
       }
 
       var self = this;
-      var once = function () {
+      var once = _.once(function () {
         self.off(name, once);
         callback.apply(this, arguments);
-      };
+      });
 
       once._callback = callback;
 
@@ -290,10 +290,23 @@
         return this;
       }
 
-      var once = function () {
+      if (EVENT_SPLITTER.test(name)) {
+        var names = name.split(EVENT_SPLITTER);
+        for (var i = 0,
+            length = names.length; i < length; i++) {
+          this.listenToOnce(obj, names[i], callback);
+        }
+        return this;
+      }
+
+      if (!callback) {
+        return this;
+      }
+
+      var once = _.once(function () {
         this.stopListening(obj, name, once);
         callback.apply(this, arguments);
-      };
+      });
 
       once._callback = callback;
 
